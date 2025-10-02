@@ -1,0 +1,6 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1758636761" />
+    <testcase name="test_project" classname="test" file="/home/mwaser/Teaching/CON/practicals/2025/assignments/lfsr/test/test.py" lineno="20" time="0.0016372203826904297" sim_time_ns="30000.0" ratio_time="18323739.624290083" />
+  </testsuite>
+</testsuites>
