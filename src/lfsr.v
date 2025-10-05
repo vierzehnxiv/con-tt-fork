@@ -1,20 +1,41 @@
-module lfsr (
-	clk_i,
-	reset_i,
-	lfsr_state_o
+// ----------------------------------------------------------------------------
+// CON 2025 T0: linear feedback shift register (lfsr)
+//
+//  - Module that implements a 32-bit LFSR
+//  - The LFSR should be initialized with a matriculation number
+//
+module lfsr(
+    input logic clk_i,
+    input logic reset_i,
+
+    output logic [31:0] lfsr_state_o
 );
-	input wire clk_i;
-	input wire reset_i;
-	output reg [31:0] lfsr_state_o;
-	reg [31:0] lfsr_p;
-	reg [31:0] lfsr_n;
-	always @(*) begin
-		lfsr_n = (lfsr_p << 1) | {31'b0000000000000000000000000000000, (((((((lfsr_p[27] ^ lfsr_p[23]) ^ lfsr_p[19]) ^ lfsr_p[18]) ^ lfsr_p[15]) ^ lfsr_p[11]) ^ lfsr_p[7]) ^ lfsr_p[4]) ^ lfsr_p[1]};
-		lfsr_state_o = lfsr_p;
-	end
-	always @(posedge clk_i or posedge reset_i)
-		if (reset_i)
-			lfsr_p <= 32'd123456789;
-		else
-			lfsr_p <= lfsr_n;
+
+    // 32-bit flip-flop for lfsr
+    logic [31:0] lfsr_p, lfsr_n;
+
+    // combinational logic for lfsr
+    always_comb begin
+        lfsr_n = (lfsr_p << 1) | {31'b0, lfsr_p[27] ^
+                                         lfsr_p[23] ^
+                                         lfsr_p[19] ^
+                                         lfsr_p[18] ^
+                                         lfsr_p[15] ^
+                                         lfsr_p[11] ^
+                                         lfsr_p[7]  ^
+                                         lfsr_p[4]  ^
+                                         lfsr_p[1] };
+
+         // assign current value of flip-flop to output
+        lfsr_state_o = lfsr_p;
+    end
+
+    // sequential logic modeling a d-flip-flop with asynchronous reset
+    always @(posedge clk_i or posedge reset_i) begin
+        if (reset_i) begin
+            lfsr_p <= 32'd 00873277;
+        end else begin
+            lfsr_p <= lfsr_n;
+        end
+    end
 endmodule
